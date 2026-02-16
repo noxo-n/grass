@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Comet & Grass Trail</title>
+    <style>
+        /* Basic Black Background & Blur */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            overflow: hidden;
+            filter: blur(4px); 
+            cursor: none; /* Hide the real cursor */
+        }
+
+        /* The Custom Grass Patch Cursor */
+        #grass-cursor {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(0deg, #228b22 0%, #7cfc00 100%);
+            clip-path: polygon(10% 100%, 20% 40%, 30% 100%, 45% 20%, 60% 100%, 80% 30%, 100% 100%);
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+        }
+
+        /* The Comet Container */
+        .comet-orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 2px;
+            animation: rotate 4s linear infinite;
+        }
+
+        .comet {
+            position: absolute;
+            top: -250px; 
+            width: 20px;
+            height: 20px;
+            background: #7cfc00;
+            border-radius: 50%;
+            box-shadow: 0 0 30px #7cfc00, 0 0 60px #228b22;
+        }
+
+        /* Shards (Both falling from sky and from cursor) */
+        .shard {
+            position: absolute;
+            background-color: #32cd32;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="grass-cursor"></div>
+
+    <div class="comet-orbit">
+        <div class="comet"></div>
+    </div>
+
+    <script>
+        const cursor = document.getElementById('grass-cursor');
+
+        // Track mouse movement for the grass patch and the trail
+        window.addEventListener('mousemove', (e) => {
+            // Move the grass patch cursor
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+
+            // Create a trail shard whenever the mouse moves
+            createShard(e.clientX, e.clientY, true);
+        });
+
+        function createShard(x, y, isTrail = false) {
+            const shard = document.createElement('div');
+            shard.classList.add('shard');
+            
+            // Randomize appearance
+            const sizeWidth = Math.random() * 3 + 1;
+            const sizeHeight = Math.random() * 15 + 5;
+            const duration = isTrail ? (Math.random() * 1 + 1) : (Math.random() * 3 + 2);
+
+            shard.style.width = sizeWidth + 'px';
+            shard.style.height = sizeHeight + 'px';
+            
+            // Positioning
+            // If it's a trail, start at mouse. If not, start at top of screen.
+            shard.style.left = (isTrail ? x : Math.random() * window.innerWidth) + 'px';
+            shard.style.top = (isTrail ? y : -50) + 'px';
+            
+            // Animation
+            shard.style.animation = `fall ${duration}s linear forwards`;
+
+            document.body.appendChild(shard);
+
+            // Clean up
+            setTimeout(() => {
+                shard.remove();
+            }, duration * 1000);
+        }
+
+        // Keep the natural "sky fall" shards going too
+        setInterval(() => {
+            createShard(0, 0, false);
+        }, 150);
+    </script>
+</body>
+</html>
