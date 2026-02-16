@@ -3,167 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grass Hub</title>
+    <title>Grass Hub Cinematic</title>
     <style>
-        /* Basic Black Background */
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             background-color: black;
             overflow: hidden;
             cursor: none;
-            font-family: Arial, sans-serif; /* Arial Font */
+            font-family: Arial, sans-serif;
         }
 
-        /* Centered Text Container */
-        .intro-container {
+        /* --- STAGE 1: INTRO TEXT --- */
+        #stage-1 {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
             z-index: 100;
-            pointer-events: none;
+            animation: fadeOutStage 1s ease forwards 6s; /* Fades out after 6s */
         }
 
-        /* "Grass Hub" Fade In */
         #grass-hub {
             font-size: 4rem;
             font-weight: bold;
-            color: #7cfc00; /* Lawn Green */
+            color: #7cfc00;
             text-shadow: 0 0 20px #228b22;
             opacity: 0;
             animation: fadeIn 3s ease-in forwards;
-            margin-top: 10px;
         }
 
-        /* Typewriter Link */
-        #discord-link {
+        #discord-link-top {
             font-size: 1.2rem;
-            color: #32cd32; /* Lime Green */
+            color: #32cd32;
             height: 1.5rem;
-            letter-spacing: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            border-right: 2px solid #7cfc00; /* Blinking cursor */
-            width: 0;
-            margin: 0 auto;
+            margin-bottom: 10px;
         }
 
-        /* Background/Foreground Layers */
-        .blur-layer {
+        /* --- STAGE 2: ABOUT SECTION --- */
+        #stage-2 {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            filter: blur(10px);
-            pointer-events: none;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 101;
+            width: 80%;
+            max-width: 600px;
+            opacity: 0;
+            display: none; /* Hidden initially */
+        }
+
+        .about-text {
+            color: #7cfc00;
+            font-size: 1.8rem;
+            line-height: 1.5;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(124, 252, 0, 0.3);
+        }
+
+        .discord-btn {
+            display: inline-flex;
+            align-items: center;
+            background-color: #2d5a27; /* Dark Green */
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: transform 0.3s, background 0.3s;
+            cursor: none; /* Keep custom cursor */
+        }
+
+        .discord-btn:hover {
+            background-color: #3e7a36;
+            transform: scale(1.05);
+        }
+
+        .discord-logo {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            fill: white;
+        }
+
+        /* --- VISUALS --- */
+        #visual-container {
+            position: absolute;
+            width: 100%; height: 100%;
             z-index: 1;
         }
 
+        .blur-layer {
+            position: absolute;
+            width: 100%; height: 100%;
+            filter: blur(10px);
+        }
+
         #grass-cursor {
-            position: fixed;
-            width: 60px;
-            height: 60px;
-            pointer-events: none;
-            z-index: 10000;
+            position: fixed; width: 60px; height: 60px;
+            pointer-events: none; z-index: 10000;
             transform: translate(-50%, -50%);
         }
 
-        #grass-cursor img {
-            width: 100%;
-            height: 100%;
-        }
-
         .comet-orbit {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 2px;
-            height: 2px;
+            position: absolute; top: 50%; left: 50%;
+            width: 2px; height: 2px;
             animation: rotate 3s linear infinite;
         }
 
+        /* SLOW MO CLASS */
+        .slow-mo .comet-orbit { animation-duration: 12s; }
+        .slow-mo .shard { animation-duration: 8s !important; }
+
         .comet {
-            position: absolute;
-            top: -250px; 
-            width: 30px;
-            height: 30px;
-            background: #adff2f;
-            border-radius: 50%;
+            position: absolute; top: -250px; 
+            width: 30px; height: 30px;
+            background: #adff2f; border-radius: 50%;
             box-shadow: 0 0 20px #7cfc00, 40px 0 50px #228b22, 80px 0 70px #006400;
         }
 
         .shard {
-            position: absolute;
-            background-color: #32cd32;
-            pointer-events: none;
-            z-index: 5;
+            position: absolute; background-color: #32cd32;
+            pointer-events: none; z-index: 5;
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
+        /* --- ANIMATIONS --- */
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes fadeOutStage { to { opacity: 0; visibility: hidden; } }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes fall {
             0% { transform: translateY(0) rotate(0deg); opacity: 1; }
             100% { transform: translateY(110vh) rotate(1080deg); opacity: 0; }
-        }
-
-        @keyframes blinkCursor {
-            from, to { border-color: transparent; }
-            50% { border-color: #7cfc00; }
         }
     </style>
 </head>
 <body>
 
-    <div class="intro-container">
-        <div id="discord-link"></div>
-        <div id="grass-hub">Grass Hub</div>
-    </div>
-
-    <div class="blur-layer">
-        <div class="comet-orbit">
-            <div class="comet"></div>
+    <div id="visual-container">
+        <div class="blur-layer">
+            <div class="comet-orbit">
+                <div class="comet"></div>
+            </div>
         </div>
     </div>
 
+    <div id="stage-1">
+        <div id="discord-link-top"></div>
+        <div id="grass-hub">Grass Hub</div>
+    </div>
+
+    <div id="stage-2">
+        <div class="about-text">
+            Grass hub is a project made by noxo. Noxo loves grass and also grass hub is multiple games support soon! so please join the discord
+        </div>
+        <a href="https://discord.gg/rDCWC4hS92" class="discord-btn" target="_blank">
+            <svg class="discord-logo" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.06,72.06,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.71,32.65-1.82,56.6.39,80.21a105.73,105.73,0,0,0,32.17,16.15,77.7,77.7,0,0,0,6.89-11.11,68.62,68.62,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.72-27.32-4.82-51.1-19.34-72.14ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+            Join Discord
+        </a>
+    </div>
+
     <div id="grass-cursor">
-        <img src="https://media.discordapp.net/attachments/1470128899714187482/1472915201929248839/image-removebg-preview.png?ex=69944ead&is=6992fd2d&hm=e5a2e9cd7cf25c8df6c237ba5a124857c738eb6f0adb8d41d27b1750dc20a7c8&=&format=webp&quality=lossless&width=866&height=866" alt="grass">
+        <img src="https://media.discordapp.net/attachments/1470128899714187482/1472915201929248839/image-removebg-preview.png?ex=69944ead&is=6992fd2d&hm=e5a2e9cd7cf25c8df6c237ba5a124857c738eb6f0adb8d41d27b1750dc20a7c8&=&format=webp&quality=lossless&width=866&height=866" width="60" height="60" alt="grass">
     </div>
 
     <script>
         const cursor = document.getElementById('grass-cursor');
-        const linkElement = document.getElementById('discord-link');
+        const visualContainer = document.getElementById('visual-container');
+        const linkElement = document.getElementById('discord-link-top');
+        const stage2 = document.getElementById('stage-2');
         const linkText = "https://discord.gg/rDCWC4hS92";
         
-        // 1. Typewriter Effect Logic
+        // 1. Typewriter
         let i = 0;
         function typeWriter() {
             if (i < linkText.length) {
                 linkElement.innerHTML += linkText.charAt(i);
-                // Adjust width as it types to keep it centered
-                linkElement.style.width = 'fit-content';
                 i++;
-                setTimeout(typeWriter, 100);
-            } else {
-                // Keep the blinking cursor for style after finishing
-                linkElement.style.animation = "blinkCursor 0.8s infinite";
+                setTimeout(typeWriter, 80);
             }
         }
-
-        // Start typewriter after a small delay
         setTimeout(typeWriter, 1000);
 
-        // 2. Cursor and Trail Logic
+        // 2. The Big Transition
+        setTimeout(() => {
+            // Activate Slow-Mo
+            visualContainer.classList.add('slow-mo');
+            
+            // Fade in Stage 2
+            stage2.style.display = 'block';
+            setTimeout(() => { stage2.style.opacity = '1'; stage2.style.transition = 'opacity 3s ease'; }, 100);
+        }, 7000); // Happens after stage 1 fades out
+
+        // 3. Cursor & Shards
         window.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
@@ -175,7 +207,12 @@
             shard.classList.add('shard');
             const sizeWidth = Math.random() * 2 + 1;
             const sizeHeight = Math.random() * 12 + 8;
-            const duration = isTrail ? (Math.random() * 1 + 0.5) : (Math.random() * 3 + 2);
+            
+            // Speed depends on whether we are in slow-mo
+            const baseDuration = isTrail ? 1 : 3;
+            const isSlow = visualContainer.classList.contains('slow-mo');
+            const duration = isSlow ? baseDuration * 4 : baseDuration;
+
             shard.style.width = sizeWidth + 'px';
             shard.style.height = sizeHeight + 'px';
             shard.style.left = (isTrail ? (x + (Math.random() * 30 - 15)) : Math.random() * window.innerWidth) + 'px';
