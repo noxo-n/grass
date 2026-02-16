@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sharp Grass & Fiery Comet</title>
+    <title>Grass Hub Intro</title>
     <style>
         /* Basic Black Background */
         body, html {
@@ -13,32 +13,69 @@
             height: 100%;
             background-color: black;
             overflow: hidden;
-            cursor: none; 
+            cursor: none;
+            font-family: Arial, sans-serif; /* Arial Font */
         }
 
-        /* Container for blurred elements only */
+        /* Centered Text Container */
+        .intro-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        /* "Grass Hub" Fade In */
+        #grass-hub {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #7cfc00; /* Lawn Green */
+            text-shadow: 0 0 20px #228b22;
+            opacity: 0;
+            animation: fadeIn 3s ease-in forwards;
+            margin-top: 10px;
+        }
+
+        /* Typewriter Link */
+        #discord-link {
+            font-size: 1.2rem;
+            color: #32cd32; /* Lime Green */
+            height: 1.5rem;
+            letter-spacing: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid #7cfc00; /* Blinking cursor */
+            width: 0;
+            margin: 0 auto;
+        }
+
+        /* Background/Foreground Layers */
         .blur-layer {
             position: absolute;
             width: 100%;
             height: 100%;
-            filter: blur(8px);
+            filter: blur(10px);
             pointer-events: none;
+            z-index: 1;
         }
 
-        /* The Custom Grass Patch Cursor (SHARP) */
         #grass-cursor {
             position: fixed;
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(0deg, #1a5c1a 0%, #7cfc00 100%);
-            /* A more complex "patch" shape */
-            clip-path: polygon(0% 100%, 10% 20%, 20% 100%, 35% 10%, 50% 100%, 65% 0%, 80% 100%, 90% 25%, 100% 100%);
+            width: 60px;
+            height: 60px;
             pointer-events: none;
             z-index: 10000;
             transform: translate(-50%, -50%);
         }
 
-        /* The Comet Container */
+        #grass-cursor img {
+            width: 100%;
+            height: 100%;
+        }
+
         .comet-orbit {
             position: absolute;
             top: 50%;
@@ -48,31 +85,26 @@
             animation: rotate 3s linear infinite;
         }
 
-        /* Fiery Comet Head (Blurred) */
         .comet {
             position: absolute;
             top: -250px; 
-            width: 25px;
-            height: 25px;
+            width: 30px;
+            height: 30px;
             background: #adff2f;
             border-radius: 50%;
-            /* The "Fiery" Trail effect using multiple shadows */
-            box-shadow: 
-                0 0 20px #7cfc00,
-                30px 0 40px #228b22,
-                60px 0 50px #006400,
-                90px 0 60px transparent;
+            box-shadow: 0 0 20px #7cfc00, 40px 0 50px #228b22, 80px 0 70px #006400;
         }
 
-        /* Sharp Shards */
         .shard {
             position: absolute;
             background-color: #32cd32;
             pointer-events: none;
             z-index: 5;
-            /* Explicitly no blur */
-            filter: none; 
-            box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            to { opacity: 1; }
         }
 
         @keyframes rotate {
@@ -81,18 +113,22 @@
         }
 
         @keyframes fall {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(110vh) rotate(720deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(1080deg); opacity: 0; }
+        }
+
+        @keyframes blinkCursor {
+            from, to { border-color: transparent; }
+            50% { border-color: #7cfc00; }
         }
     </style>
 </head>
 <body>
+
+    <div class="intro-container">
+        <div id="discord-link"></div>
+        <div id="grass-hub">Grass Hub</div>
+    </div>
 
     <div class="blur-layer">
         <div class="comet-orbit">
@@ -100,53 +136,56 @@
         </div>
     </div>
 
-    <div id="grass-cursor"></div>
+    <div id="grass-cursor">
+        <img src="https://media.discordapp.net/attachments/1470128899714187482/1472915201929248839/image-removebg-preview.png?ex=69944ead&is=6992fd2d&hm=e5a2e9cd7cf25c8df6c237ba5a124857c738eb6f0adb8d41d27b1750dc20a7c8&=&format=webp&quality=lossless&width=866&height=866" alt="grass">
+    </div>
 
     <script>
         const cursor = document.getElementById('grass-cursor');
+        const linkElement = document.getElementById('discord-link');
+        const linkText = "https://discord.gg/rDCWC4hS92";
+        
+        // 1. Typewriter Effect Logic
+        let i = 0;
+        function typeWriter() {
+            if (i < linkText.length) {
+                linkElement.innerHTML += linkText.charAt(i);
+                // Adjust width as it types to keep it centered
+                linkElement.style.width = 'fit-content';
+                i++;
+                setTimeout(typeWriter, 100);
+            } else {
+                // Keep the blinking cursor for style after finishing
+                linkElement.style.animation = "blinkCursor 0.8s infinite";
+            }
+        }
 
-        // Track mouse for cursor and sharp trail
+        // Start typewriter after a small delay
+        setTimeout(typeWriter, 1000);
+
+        // 2. Cursor and Trail Logic
         window.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
-
-            // Create sharp shards on move
-            if (Math.random() > 0.5) { // Optimization so it's not too crowded
-                createShard(e.clientX, e.clientY, true);
-            }
+            if (Math.random() > 0.4) createShard(e.clientX, e.clientY, true);
         });
 
         function createShard(x, y, isTrail = false) {
             const shard = document.createElement('div');
             shard.classList.add('shard');
-            
-            // Randomize appearance for grass shards
             const sizeWidth = Math.random() * 2 + 1;
-            const sizeHeight = Math.random() * 15 + 10;
-            const duration = isTrail ? (Math.random() * 0.8 + 0.5) : (Math.random() * 3 + 2);
-
+            const sizeHeight = Math.random() * 12 + 8;
+            const duration = isTrail ? (Math.random() * 1 + 0.5) : (Math.random() * 3 + 2);
             shard.style.width = sizeWidth + 'px';
             shard.style.height = sizeHeight + 'px';
-            
-            // Start position
-            shard.style.left = (isTrail ? (x + (Math.random() * 20 - 10)) : Math.random() * window.innerWidth) + 'px';
+            shard.style.left = (isTrail ? (x + (Math.random() * 30 - 15)) : Math.random() * window.innerWidth) + 'px';
             shard.style.top = (isTrail ? y : -50) + 'px';
-            
-            // Apply falling animation
             shard.style.animation = `fall ${duration}s linear forwards`;
-
             document.body.appendChild(shard);
-
-            // Cleanup
-            setTimeout(() => {
-                shard.remove();
-            }, duration * 1000);
+            setTimeout(() => shard.remove(), duration * 1000);
         }
 
-        // Falling sky shards (Sharp)
-        setInterval(() => {
-            createShard(0, 0, false);
-        }, 200);
+        setInterval(() => createShard(0, 0, false), 150);
     </script>
 </body>
 </html>
