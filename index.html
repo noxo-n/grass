@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grass Hub Cinematic</title>
+    <title>Grass Hub - Dark Green Edition</title>
     <style>
         body, html {
             margin: 0; padding: 0;
@@ -21,21 +21,20 @@
             transform: translate(-50%, -50%);
             text-align: center;
             z-index: 100;
-            animation: fadeOutStage 1s ease forwards 6s; /* Fades out after 6s */
+            animation: fadeOutStage 1s ease forwards 6s;
         }
 
         #grass-hub {
             font-size: 4rem;
             font-weight: bold;
-            color: #7cfc00;
-            text-shadow: 0 0 20px #228b22;
+            color: #2d5a27; /* Dark Grass Green */
             opacity: 0;
             animation: fadeIn 3s ease-in forwards;
         }
 
         #discord-link-top {
             font-size: 1.2rem;
-            color: #32cd32;
+            color: #2d5a27; /* Dark Grass Green */
             height: 1.5rem;
             margin-bottom: 10px;
         }
@@ -48,17 +47,17 @@
             text-align: center;
             z-index: 101;
             width: 80%;
-            max-width: 600px;
+            max-width: 650px;
             opacity: 0;
-            display: none; /* Hidden initially */
+            display: none;
         }
 
         .about-text {
-            color: #7cfc00;
+            color: #2d5a27; /* Dark Grass Green */
             font-size: 1.8rem;
-            line-height: 1.5;
+            line-height: 1.4;
             margin-bottom: 30px;
-            text-shadow: 0 0 10px rgba(124, 252, 0, 0.3);
+            font-weight: bold;
         }
 
         .discord-btn {
@@ -68,16 +67,15 @@
             color: white;
             text-decoration: none;
             padding: 15px 30px;
-            border-radius: 8px;
+            border-radius: 4px; /* Sharper look */
             font-weight: bold;
             font-size: 1.2rem;
-            transition: transform 0.3s, background 0.3s;
-            cursor: none; /* Keep custom cursor */
+            transition: transform 0.2s, background 0.2s;
         }
 
         .discord-btn:hover {
-            background-color: #3e7a36;
-            transform: scale(1.05);
+            background-color: #1e3d1a;
+            transform: scale(1.02);
         }
 
         .discord-logo {
@@ -112,19 +110,20 @@
             animation: rotate 3s linear infinite;
         }
 
-        /* SLOW MO CLASS */
+        /* SLOW MO EFFECT */
         .slow-mo .comet-orbit { animation-duration: 12s; }
-        .slow-mo .shard { animation-duration: 8s !important; }
+        .slow-mo .shard { animation-duration: 9s !important; }
 
         .comet {
             position: absolute; top: -250px; 
             width: 30px; height: 30px;
-            background: #adff2f; border-radius: 50%;
-            box-shadow: 0 0 20px #7cfc00, 40px 0 50px #228b22, 80px 0 70px #006400;
+            background: #2d5a27; /* Darkened comet */
+            border-radius: 50%;
+            box-shadow: 0 0 40px #1e3d1a, 60px 0 60px #1a3316;
         }
 
         .shard {
-            position: absolute; background-color: #32cd32;
+            position: absolute; background-color: #2d5a27; /* Darkened shards */
             pointer-events: none; z-index: 5;
         }
 
@@ -174,7 +173,6 @@
         const stage2 = document.getElementById('stage-2');
         const linkText = "https://discord.gg/rDCWC4hS92";
         
-        // 1. Typewriter
         let i = 0;
         function typeWriter() {
             if (i < linkText.length) {
@@ -185,17 +183,12 @@
         }
         setTimeout(typeWriter, 1000);
 
-        // 2. The Big Transition
         setTimeout(() => {
-            // Activate Slow-Mo
             visualContainer.classList.add('slow-mo');
-            
-            // Fade in Stage 2
             stage2.style.display = 'block';
             setTimeout(() => { stage2.style.opacity = '1'; stage2.style.transition = 'opacity 3s ease'; }, 100);
-        }, 7000); // Happens after stage 1 fades out
+        }, 7000);
 
-        // 3. Cursor & Shards
         window.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
@@ -208,10 +201,9 @@
             const sizeWidth = Math.random() * 2 + 1;
             const sizeHeight = Math.random() * 12 + 8;
             
-            // Speed depends on whether we are in slow-mo
             const baseDuration = isTrail ? 1 : 3;
             const isSlow = visualContainer.classList.contains('slow-mo');
-            const duration = isSlow ? baseDuration * 4 : baseDuration;
+            const duration = isSlow ? baseDuration * 3 : baseDuration;
 
             shard.style.width = sizeWidth + 'px';
             shard.style.height = sizeHeight + 'px';
