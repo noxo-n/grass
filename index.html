@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Green Comet & Grass Trail</title>
+    <title>Sharp Grass & Fiery Comet</title>
     <style>
-        /* Basic Black Background & Blur */
+        /* Basic Black Background */
         body, html {
             margin: 0;
             padding: 0;
@@ -13,17 +13,26 @@
             height: 100%;
             background-color: black;
             overflow: hidden;
-            filter: blur(4px); 
-            cursor: none; /* Hide the real cursor */
+            cursor: none; 
         }
 
-        /* The Custom Grass Patch Cursor */
+        /* Container for blurred elements only */
+        .blur-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            filter: blur(8px);
+            pointer-events: none;
+        }
+
+        /* The Custom Grass Patch Cursor (SHARP) */
         #grass-cursor {
             position: fixed;
-            width: 30px;
-            height: 30px;
-            background: linear-gradient(0deg, #228b22 0%, #7cfc00 100%);
-            clip-path: polygon(10% 100%, 20% 40%, 30% 100%, 45% 20%, 60% 100%, 80% 30%, 100% 100%);
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(0deg, #1a5c1a 0%, #7cfc00 100%);
+            /* A more complex "patch" shape */
+            clip-path: polygon(0% 100%, 10% 20%, 20% 100%, 35% 10%, 50% 100%, 65% 0%, 80% 100%, 90% 25%, 100% 100%);
             pointer-events: none;
             z-index: 10000;
             transform: translate(-50%, -50%);
@@ -36,25 +45,34 @@
             left: 50%;
             width: 2px;
             height: 2px;
-            animation: rotate 4s linear infinite;
+            animation: rotate 3s linear infinite;
         }
 
+        /* Fiery Comet Head (Blurred) */
         .comet {
             position: absolute;
             top: -250px; 
-            width: 20px;
-            height: 20px;
-            background: #7cfc00;
+            width: 25px;
+            height: 25px;
+            background: #adff2f;
             border-radius: 50%;
-            box-shadow: 0 0 30px #7cfc00, 0 0 60px #228b22;
+            /* The "Fiery" Trail effect using multiple shadows */
+            box-shadow: 
+                0 0 20px #7cfc00,
+                30px 0 40px #228b22,
+                60px 0 50px #006400,
+                90px 0 60px transparent;
         }
 
-        /* Shards (Both falling from sky and from cursor) */
+        /* Sharp Shards */
         .shard {
             position: absolute;
             background-color: #32cd32;
             pointer-events: none;
-            opacity: 0.8;
+            z-index: 5;
+            /* Explicitly no blur */
+            filter: none; 
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
         @keyframes rotate {
@@ -63,7 +81,11 @@
         }
 
         @keyframes fall {
-            to {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
                 transform: translateY(110vh) rotate(720deg);
                 opacity: 0;
             }
@@ -72,57 +94,59 @@
 </head>
 <body>
 
-    <div id="grass-cursor"></div>
-
-    <div class="comet-orbit">
-        <div class="comet"></div>
+    <div class="blur-layer">
+        <div class="comet-orbit">
+            <div class="comet"></div>
+        </div>
     </div>
+
+    <div id="grass-cursor"></div>
 
     <script>
         const cursor = document.getElementById('grass-cursor');
 
-        // Track mouse movement for the grass patch and the trail
+        // Track mouse for cursor and sharp trail
         window.addEventListener('mousemove', (e) => {
-            // Move the grass patch cursor
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
 
-            // Create a trail shard whenever the mouse moves
-            createShard(e.clientX, e.clientY, true);
+            // Create sharp shards on move
+            if (Math.random() > 0.5) { // Optimization so it's not too crowded
+                createShard(e.clientX, e.clientY, true);
+            }
         });
 
         function createShard(x, y, isTrail = false) {
             const shard = document.createElement('div');
             shard.classList.add('shard');
             
-            // Randomize appearance
-            const sizeWidth = Math.random() * 3 + 1;
-            const sizeHeight = Math.random() * 15 + 5;
-            const duration = isTrail ? (Math.random() * 1 + 1) : (Math.random() * 3 + 2);
+            // Randomize appearance for grass shards
+            const sizeWidth = Math.random() * 2 + 1;
+            const sizeHeight = Math.random() * 15 + 10;
+            const duration = isTrail ? (Math.random() * 0.8 + 0.5) : (Math.random() * 3 + 2);
 
             shard.style.width = sizeWidth + 'px';
             shard.style.height = sizeHeight + 'px';
             
-            // Positioning
-            // If it's a trail, start at mouse. If not, start at top of screen.
-            shard.style.left = (isTrail ? x : Math.random() * window.innerWidth) + 'px';
+            // Start position
+            shard.style.left = (isTrail ? (x + (Math.random() * 20 - 10)) : Math.random() * window.innerWidth) + 'px';
             shard.style.top = (isTrail ? y : -50) + 'px';
             
-            // Animation
+            // Apply falling animation
             shard.style.animation = `fall ${duration}s linear forwards`;
 
             document.body.appendChild(shard);
 
-            // Clean up
+            // Cleanup
             setTimeout(() => {
                 shard.remove();
             }, duration * 1000);
         }
 
-        // Keep the natural "sky fall" shards going too
+        // Falling sky shards (Sharp)
         setInterval(() => {
             createShard(0, 0, false);
-        }, 150);
+        }, 200);
     </script>
 </body>
 </html>
